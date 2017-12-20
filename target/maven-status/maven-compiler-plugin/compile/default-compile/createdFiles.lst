@@ -1,0 +1,5 @@
+io/prometheus/client/exporter/HTTPServer$HTTPMetricHandler.class
+io/prometheus/client/exporter/HTTPServer$LocalByteArray.class
+io/prometheus/client/exporter/HTTPServer.class
+io/prometheus/client/exporter/HTTPServer$DaemonThreadFactory.class
+io/prometheus/client/exporter/HTTPServer$1.class
