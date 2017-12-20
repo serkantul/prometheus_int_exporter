@@ -27,9 +27,11 @@ Prometheus exporter for INT
           - targets: ['YOUR_IP_ADDRESS:1234']
 
 * Run prometheus with the following command
-      sudo docker run -p 9090:9090 -v /tmp/prometheus.yml:/etc/prometheus/prometheus.yml prom/prometheus
+
+        sudo docker run -p 9090:9090 -v /tmp/prometheus.yml:/etc/prometheus/prometheus.yml prom/prometheus
 
 * You should able to see
+
       http://localhost:9090/metrics
 
 
@@ -41,6 +43,7 @@ Prometheus exporter for INT
   mvn compile or mvn verify
 
 * Run the exporter and you should be able to see http://localhost:1234/
+
       mvn exec:java -Dexec.classpathScope=test -Dexec.mainClass="io.prometheus.client.exporter.ExampleExporter"
 
 * Open Prometheus page http://localhost:9090/graph
@@ -50,8 +53,11 @@ Prometheus web page. Start typing latency and you'll see available INT metrics.
 
 ## Query examples
 s1_flow_latency
+
 s2_hop_latency_ms{flows="10.0.10.1:1234->10.0.20.1:8080"}
+
 total_flow_latency_ms{flowspath=~"^10.0.10.1:.*_s3_.*"}
+
 topk(3, total_flow_latency_ms)
 
 ## Grafana Integration
