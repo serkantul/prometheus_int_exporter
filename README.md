@@ -83,6 +83,68 @@ Choose data source as Mixed
 Add your PromQL query like
     s1_flow_latency
 
+## PushGateway Integration
+
+  You need to add the Pushgateway as a target to scrape in configuration file. For example, add these lines to /tmp/prometheus.yml
+
+    - job_name: 'prometheus'
+            # metrics_path defaults to '/metrics'
+            # scheme defaults to 'http'.
+
+            honor_labels: true
+            scrape_interval: 5s
+            static_configs:
+              - targets: ['YOUR_IP_ADDRESS:9091']
+
+    Note: you should always set honor_labels: true in the scrape config
+
+### Installing and running prom/pushgateway
+
+#### Docker installation:
+
+    docker pull prom/pushgateway
+    docker run -d -p 9091:9091 prom/pushgateway
+
+  Although using docker seems to be easiest way, you can use binary releases to install and run pushgateway.
+
+  Download binary releases for your platform from the [release page](https://github.com/prometheus/pushgateway/releases) and unpack the tarball.
+    If you want to compile yourself from the sources, you need a working Go setup. Then use the provided Makefile (type make).
+    For the most basic setup, just start the binary. To change the address to listen on, use the -web.listen-address flag.
+    By default, Pushgateway does not persist metrics. However, the -persistence.file flag allows you to specify a file in which
+    the pushed metrics will be persisted (so that they survive restarts of the Pushgateway).
+
+### Using pushgateway
+
+Push a single sample into the group identified by {job="IntDemo_job"}:
+
+    echo "IntDemo_metric 3.14" | curl --data-binary @-
+    localhost:9091/metrics/job/IntDemo_job
+
+You can give the specific client address like http://pushgateway.example.org if you have one.
+Since no type information has been provided, IntDemo_metric will be of type untyped.
+
+Push something more complex into the group identified by {job="IntDemo_job",instance="some_instance"}:
+
+    cat <<EOF | curl --data-binary @- localhost:9091/metrics/job/IntDemo_job/instance/some_instance
+        # TYPE some_metric counter
+        some_metric{label="sw01"} 42
+        # TYPE another_metric gauge
+        # HELP another_metric Just an example.
+        another_metric 2398.283
+      EOF
+
+Note: how type information and help strings are provided. Those linesare optional, but strongly encouraged for anything more complex.
+
+You can check status of the pushed metrics from
+
+    http://localhost:9091/metrics
+
+Delete all metrics grouped by job and instance:
+
+    curl -X DELETE localhost:9091/metrics/job/IntDemo_job/instance/some_instance
+Delete all metrics grouped by job only:
+
+    curl -X DELETE localhost:9091/metrics/job/IntDemo_job
 
 ## Useful Links
 Histogram explanation
