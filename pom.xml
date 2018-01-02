@@ -10,23 +10,20 @@
                     <source>1.8</source>
                     <target>1.8</target>
                 </configuration>
+		<version>3.7.0</version>
             </plugin>
         </plugins>
     </build>
 
-    <parent>
-        <groupId>io.prometheus</groupId>
-        <artifactId>parent</artifactId>
-        <version>0.1.1-SNAPSHOT</version>
-    </parent>
 
-    <groupId>io.prometheus</groupId>
-    <artifactId>simpleclient_httpserver</artifactId>
-    <packaging>bundle</packaging>
+    <groupId>org.onf.intcollector</groupId>
+    <artifactId>int_collector</artifactId>
+    <packaging>pom</packaging>
+    <version>1.0-SNAPSHOT</version>
 
-    <name>Prometheus Java Simpleclient Httpserver</name>
+    <name>Prometheus INT Exporter</name>
     <description>
-        Httpserver exposition for the simpleclient.
+        Prometheus exporter for INT data.
     </description>
 
     <licenses>
@@ -37,25 +34,23 @@
         </license>
     </licenses>
 
-    <developers>
-        <developer>
-            <id>brian-brazil</id>
-            <name>Brian Brazil</name>
-            <email>brian.brazil@robustperception.io</email>
-        </developer>
-    </developers>
-
     <dependencies>
         <dependency>
             <groupId>io.prometheus</groupId>
             <artifactId>simpleclient</artifactId>
-            <version>0.1.1-SNAPSHOT</version>
+            <version>0.1.1</version>
         </dependency>
         <dependency>
             <groupId>io.prometheus</groupId>
             <artifactId>simpleclient_common</artifactId>
-            <version>0.1.1-SNAPSHOT</version>
+            <version>0.1.1</version>
         </dependency>
+        <dependency>
+            <groupId>io.prometheus</groupId>
+            <artifactId>simpleclient_pushgateway</artifactId>
+            <version>0.1.1</version>
+        </dependency>
+
         <!-- Test Dependencies Follow -->
         <dependency>
             <groupId>junit</groupId>
