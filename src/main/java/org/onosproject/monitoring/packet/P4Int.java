@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.prometheus.client.packet;
+package org.onosproject.monitoring.packet;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
-import static io.prometheus.client.packet.PacketUtils.checkInput;
+import static org.onosproject.monitoring.packet.PacketUtils.checkInput;
 
 /**
  * Representation of an INT Packet.

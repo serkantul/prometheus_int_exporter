@@ -1,4 +1,4 @@
-package basic_udp_server;
+package org.onosproject.monitoring.server;
 
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;

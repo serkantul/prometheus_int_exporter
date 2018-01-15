@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.prometheus.client.packet;
+package org.onosproject.monitoring.packet;
 
 /**
  * Signals that an error occurred during deserialization of a packet.

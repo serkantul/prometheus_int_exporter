@@ -14,7 +14,10 @@
  * limitations under the License.
  */
 
-package io.prometheus.client.packet;
+package org.onosproject.monitoring.packet;
+
+import org.onosproject.monitoring.packet.DeserializationException;
+import org.onosproject.monitoring.packet.Deserializer;
 
 import java.nio.ByteBuffer;
 

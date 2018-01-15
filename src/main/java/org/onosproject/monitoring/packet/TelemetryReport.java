@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package io.prometheus.client.packet;
+package org.onosproject.monitoring.packet;
 
 import java.nio.ByteBuffer;
 
-import static io.prometheus.client.packet.PacketUtils.checkHeaderLength;
-import static io.prometheus.client.packet.PacketUtils.checkInput;
+import static org.onosproject.monitoring.packet.PacketUtils.checkHeaderLength;
+import static org.onosproject.monitoring.packet.PacketUtils.checkInput;
 
 /**
  * Representation of Telemetry Report Packet.

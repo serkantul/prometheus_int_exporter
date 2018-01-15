@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.prometheus.client.packet;
+package org.onosproject.monitoring.packet;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
