@@ -7,11 +7,39 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.*;
 
 public class Client {
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String args[]){
+
+        byte[] buf = new byte[256];
+        DatagramSocket socket = null;
+        try {
+            socket = new DatagramSocket();
+        } catch (SocketException e) {
+            e.printStackTrace();
+        }
+        InetAddress address = null;
+        try {
+            address = InetAddress.getLocalHost();
+            System.out.println(address);
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+        buf= "hello".getBytes();
+        DatagramPacket packet = new DatagramPacket(buf, buf.length, address, 27072);
+        try {
+            socket.send(packet);
+            System.out.println(buf);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+/*    public static void main(String[] args) throws Exception {
         String host = "localhost";
         int port = 27072;
 
@@ -49,5 +77,5 @@ public class Client {
         } finally {
             workerGroup.shutdownGracefully();
         }
-    }
+    }*/
 }

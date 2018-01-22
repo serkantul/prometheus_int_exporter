@@ -8,10 +8,13 @@ import io.netty.channel.group.DefaultChannelGroup;
 import io.netty.util.ReferenceCountUtil;
 import io.netty.util.concurrent.GlobalEventExecutor;
 
-public class ServerHandler extends SimpleChannelInboundHandler<String> {
+import java.net.DatagramPacket;
+
+public class ServerHandler extends SimpleChannelInboundHandler<DatagramPacket> {
 
     private static final ChannelGroup channels = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
 
+/*
     @Override
     public void handlerAdded(ChannelHandlerContext ctx) throws Exception {
         Channel incoming = ctx.channel();
@@ -39,28 +42,19 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
         }
         channels.remove(ctx.channel());
     }
+*/
 
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, String msg) throws Exception {
-        Channel incoming = ctx.channel();
-
-        System.out.println("[" + incoming.remoteAddress() + "]: " + msg);
-        ReferenceCountUtil.release(msg);
-    }
-
-    /*
-    @Override
-    protected void channelRead0(ChannelHandlerContext ctx, String msg) throws Exception {
+    protected void channelRead0(ChannelHandlerContext ctx, DatagramPacket datagramPacket) throws Exception {
         Channel incoming = ctx.channel();
         for(Channel channel : channels){
             if(channel != incoming){
-                channel.write("[" + incoming.remoteAddress() + "]" + msg + "\n");
+                channel.write("[" + incoming.remoteAddress() + "]" + datagramPacket.getData() + "\n");
                 channel.flush();
             }
         }
 
     }
-    */
 
     /*
     @Override
