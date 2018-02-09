@@ -5,10 +5,9 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.group.ChannelGroup;
 import io.netty.channel.group.DefaultChannelGroup;
+import io.netty.channel.socket.DatagramPacket;
 import io.netty.util.ReferenceCountUtil;
 import io.netty.util.concurrent.GlobalEventExecutor;
-
-import java.net.DatagramPacket;
 
 public class ServerHandler extends SimpleChannelInboundHandler<DatagramPacket> {
 
@@ -46,14 +45,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<DatagramPacket> {
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, DatagramPacket datagramPacket) throws Exception {
-        Channel incoming = ctx.channel();
-        for(Channel channel : channels){
-            if(channel != incoming){
-                channel.write("[" + incoming.remoteAddress() + "]" + datagramPacket.getData() + "\n");
-                channel.flush();
-            }
-        }
-
+        // receive INT report
     }
 
     /*
