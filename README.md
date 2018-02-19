@@ -1,5 +1,7 @@
-# prometheus_int_exporter
-Prometheus exporter for INT
+# PROMETHEUS INT(INBAND NETWORK TELEMETRY) EXPORTER
+
+This repository is made available to support collecting and parsing Telemetry Reports which is specified by P4 Applications Working Group. Metrics related to Inband Network Telemetry are pushed to Prometheus Monitoring agent.
+This work is still in progress.
 
 ## Steps to install Prometheus
 
