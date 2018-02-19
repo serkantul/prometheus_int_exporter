@@ -16,10 +16,14 @@
 
 package org.onosproject.monitoring.packet;
 
+import org.jnetpcap.Pcap;
+import org.jnetpcap.packet.PcapPacket;
+import org.jnetpcap.packet.PcapPacketHandler;
 import org.onosproject.monitoring.packet.DeserializationException;
 import org.onosproject.monitoring.packet.Deserializer;
 
 import java.nio.ByteBuffer;
+import java.util.Date;
 
 import static junit.framework.TestCase.fail;
 import static org.junit.Assert.assertTrue;
@@ -97,5 +101,46 @@ public final class PacketTestUtils {
         } catch (DeserializationException e) {
             assertTrue(true);
         }
+    }
+
+    public static byte[] readFromPcapFile(String fname) {
+        final StringBuilder errbuf = new StringBuilder(); //For any error msgs
+        final ByteBuffer bb = ByteBuffer.allocate(1000);
+        System.out.printf("Opening file for reading: %s%n", fname);
+        Pcap pcap = Pcap.openOffline(fname, errbuf);
+        if (pcap == null) {
+            System.err.printf("Error while opening pcap file for reading: "
+                    + errbuf.toString());
+            return null;
+        }
+
+
+        /***************************************************************************
+         * Create a packet handler which will receive packets from the
+         * libpcap loop.
+         **************************************************************************/
+        PcapPacketHandler<String> jpacketHandler = new PcapPacketHandler<String>() {
+
+            public void nextPacket(PcapPacket packet, String user) {
+                bb.put(packet.getByteArray(0, packet.size()));
+                System.out.printf("Received at %s caplen=%-4d len=%-4d %s\n",
+                        new Date(packet.getCaptureHeader().timestampInMillis()),
+                        packet.getCaptureHeader().caplen(), // Length actually captured
+                        packet.getCaptureHeader().wirelen(), // Original length
+                        user // User supplied object
+                );
+            }
+        };
+        try {
+            //Read one packet
+            pcap.loop(1, jpacketHandler, "jNetPcap rocks!");
+        } finally {
+            pcap.close();
+
+        }
+        byte[] rb = new byte[bb.position()];
+        bb.rewind();
+        bb.get(rb);
+        return rb;
     }
 }

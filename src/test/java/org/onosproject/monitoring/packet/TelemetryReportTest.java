@@ -18,6 +18,7 @@ package org.onosproject.monitoring.packet;
 import org.junit.Test;
 
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
 /**
@@ -130,4 +131,24 @@ public class TelemetryReportTest {
         PacketTestUtils.testDeserializeTruncated(deserializer, bytePacketDropReport);
         PacketTestUtils.testDeserializeTruncated(deserializer, bytePacketSwitchLocalReport);
     }
+
+    @Test
+    public void testDeserializeFromPcap() throws Exception {
+        final String fname = "src/test/resources/int_report.pcap";
+        byte[] byteFromPcap = PacketTestUtils.readFromPcapFile(fname);
+        assertNotNull(byteFromPcap);
+        int offset = 14 + 20 + 8; // Ethernet + IPv4 + UDP
+        TelemetryReport reportPacket = deserializer.deserialize(byteFromPcap, offset, byteFromPcap.length - offset);
+
+        assertThat(reportPacket.getVersion(), is((byte) 0x00));
+        assertThat(reportPacket.getNextProto(), is((byte) 0x00));
+        assertThat(reportPacket.hasDroppedPacket(), is((boolean) false));
+        assertThat(reportPacket.hasCongestion(), is((boolean) false));
+        assertThat(reportPacket.hasTrackedFlow(), is((boolean) true));
+        assertThat(reportPacket.getHwId(), is((byte) 0x00));
+        assertThat(reportPacket.getSequence(), is((int) 0x00));
+        assertThat(reportPacket.getIngressTimeStamp(), is((int) 0x00));
+
+    }
+
 }
