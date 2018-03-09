@@ -137,8 +137,13 @@ public class TelemetryReportTest {
         final String fname = "src/test/resources/int_report.pcap";
         byte[] byteFromPcap = PacketTestUtils.readFromPcapFile(fname);
         assertNotNull(byteFromPcap);
-        int offset = 14 + 20 + 8; // Ethernet + IPv4 + UDP
-        TelemetryReport reportPacket = deserializer.deserialize(byteFromPcap, offset, byteFromPcap.length - offset);
+
+        Ethernet eth = Ethernet.deserializer().deserialize(byteFromPcap, 0, byteFromPcap.length);
+        IPv4 ip = (IPv4) eth.getPayload();
+        UDP udp = (UDP) ip.getPayload();
+        byte[] bytePacketUdp = udp.serialize();
+
+        TelemetryReport reportPacket = deserializer.deserialize(bytePacketUdp, 0, bytePacketUdp.length);
 
         assertThat(reportPacket.getVersion(), is((byte) 0x00));
         assertThat(reportPacket.getNextProto(), is((byte) 0x00));
