@@ -37,6 +37,7 @@ public class UDP extends BasePacket {
 //                    .put(UDP.VXLAN_UDP_PORT, VXLAN.deserializer())
 //                    .put(UDP.RIP_PORT, RIP.deserializer())
 //                    .put(UDP.RIPNG_PORT, RIPng.deserializer())
+                    .put(UDP.TELEMETRY_REPORT_PORT, TelemetryReport.deserializer())
                     .build();
 
     public static final int DHCP_SERVER_PORT = 67;
@@ -46,7 +47,11 @@ public class UDP extends BasePacket {
     public static final int VXLAN_UDP_PORT = 4789;
     public static final int RIP_PORT = 520;
     public static final int RIPNG_PORT = 521;
+    public static final int TELEMETRY_REPORT_PORT = 1234;
 
+    private static final byte INT_DSCP = 0x1;
+
+    private static final short IP_HEADER_LENGTH = 20;
     private static final short UDP_HEADER_LENGTH = 8;
 
     protected int sourcePort;
@@ -264,11 +269,20 @@ public class UDP extends BasePacket {
             udp.length = bb.getShort();
             udp.checksum = bb.getShort();
 
+            byte dscp = 0;
+            int ipHeaderOffset = offset - IP_HEADER_LENGTH;
+            if (ipHeaderOffset >= 0) {
+                byte tos = data[ipHeaderOffset + 1];
+                dscp = (byte) (tos >> 2 & 0x3f);
+            }
+
             Deserializer<? extends IPacket> deserializer;
             if (UDP.PORT_DESERIALIZER_MAP.containsKey(udp.destinationPort)) {
                 deserializer = UDP.PORT_DESERIALIZER_MAP.get(udp.destinationPort);
             } else if (UDP.PORT_DESERIALIZER_MAP.containsKey(udp.sourcePort)) {
                 deserializer = UDP.PORT_DESERIALIZER_MAP.get(udp.sourcePort);
+            } else if (dscp == INT_DSCP) {
+                deserializer = P4Int.deserializer();
             } else {
                 deserializer = Data.deserializer();
             }

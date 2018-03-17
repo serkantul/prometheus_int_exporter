@@ -29,7 +29,10 @@ import static org.onosproject.monitoring.packet.PacketUtils.checkInput;
 
 public class TCP extends BasePacket {
 
+    private static final short IP_HEADER_LENGTH = 20;
     private static final short TCP_HEADER_LENGTH = 20;
+
+    private static final byte INT_DSCP = 0x1;
 
     protected int sourcePort;
     protected int destinationPort;
@@ -420,8 +423,22 @@ public class TCP extends BasePacket {
                 bb.get(tcp.options, 0, optLength);
             }
 
-            tcp.payload = Data.deserializer()
-                    .deserialize(data, bb.position(), bb.limit() - bb.position());
+            byte dscp = 0;
+            int ipHeaderOffset = offset - IP_HEADER_LENGTH;
+            if (ipHeaderOffset >= 0) {
+                byte tos = data[ipHeaderOffset + 1];
+                dscp = (byte) (tos >> 2 & 0x3f);
+            }
+
+            Deserializer<? extends IPacket> deserializer;
+            if (dscp == INT_DSCP) {
+                deserializer = P4Int.deserializer();
+            } else {
+                deserializer = Data.deserializer();
+            }
+
+            tcp.payload = deserializer.deserialize(data, bb.position(),
+                                                   bb.limit() - bb.position());
             tcp.payload.setParent(tcp);
             return tcp;
         };
