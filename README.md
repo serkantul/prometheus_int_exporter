@@ -48,6 +48,11 @@ This work is still in progress.
 
       mvn exec:java -Dexec.classpathScope=test -Dexec.mainClass="io.prometheus.client.exporter.ExampleExporter"
 
+* NOTE: To install jnetpcap:
+
+      mvn install:install-file -Dfile="jnetpcap.jar" -DgroupId="jnetpcap" -DartifactId="jnetpcap" -Dversion="1.3.0" -Dpackaging="jar"
+
+
 * Open Prometheus page http://localhost:9090/graph
 * You should able to see our int demo service is up http://localhost:9090/targets
 * You can play around with the metrics by using the graph tab in
