@@ -237,10 +237,8 @@ public class TelemetryReport extends BasePacket {
                 reportPacket.egressTstamp = bb.getInt();
             }
 
-            //TODO need to parse ethernet/ipv4/tcp parsing here it is the actual packet
-            //just skip it without parsing
-            bb.position(bb.position() + 14 + 20 + 20);
-            reportPacket.payload = P4Int.deserializer()
+            // Inner Ethernet header
+            reportPacket.payload = Ethernet.deserializer()
                     .deserialize(data, bb.position(), bb.limit() - bb.position());
             reportPacket.payload.setParent(reportPacket);
 

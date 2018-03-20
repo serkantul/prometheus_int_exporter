@@ -20,6 +20,7 @@ import org.junit.Test;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Tests for class {@link TelemetryReport}.
@@ -137,8 +138,13 @@ public class TelemetryReportTest {
         final String fname = "src/test/resources/int_report.pcap";
         byte[] byteFromPcap = PacketTestUtils.readFromPcapFile(fname);
         assertNotNull(byteFromPcap);
-        int offset = 14 + 20 + 8; // Ethernet + IPv4 + UDP
-        TelemetryReport reportPacket = deserializer.deserialize(byteFromPcap, offset, byteFromPcap.length - offset);
+
+        Ethernet eth = Ethernet.deserializer().deserialize(byteFromPcap, 0, byteFromPcap.length);
+        IPv4 ip = (IPv4) eth.getPayload();
+        UDP udp = (UDP) ip.getPayload();
+
+        assertTrue(udp.getPayload() instanceof TelemetryReport);
+        TelemetryReport reportPacket = (TelemetryReport) udp.getPayload();
 
         assertThat(reportPacket.getVersion(), is((byte) 0x00));
         assertThat(reportPacket.getNextProto(), is((byte) 0x00));
@@ -148,7 +154,5 @@ public class TelemetryReportTest {
         assertThat(reportPacket.getHwId(), is((byte) 0x00));
         assertThat(reportPacket.getSequence(), is((int) 0x00));
         assertThat(reportPacket.getIngressTimeStamp(), is((int) 0x00));
-
     }
-
 }
