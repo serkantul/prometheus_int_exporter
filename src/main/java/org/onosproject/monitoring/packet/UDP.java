@@ -30,7 +30,7 @@ import static org.onosproject.monitoring.packet.PacketUtils.checkInput;
 public class UDP extends BasePacket {
     public static final Map<Integer, Deserializer<? extends IPacket>> PORT_DESERIALIZER_MAP =
             ImmutableMap.<Integer, Deserializer<? extends IPacket>>builder()
-//                    .put(UDP.DHCP_SERVER_PORT, DHCP.deserializer())
+                    .put(UDP.INTMON_PORT, TelemetryReport.deserializer())
 //                    .put(UDP.DHCP_CLIENT_PORT, DHCP.deserializer())
 //                    .put(UDP.DHCP_V6_SERVER_PORT, DHCP6.deserializer())
 //                    .put(UDP.DHCP_V6_CLIENT_PORT, DHCP6.deserializer())
@@ -46,6 +46,7 @@ public class UDP extends BasePacket {
     public static final int VXLAN_UDP_PORT = 4789;
     public static final int RIP_PORT = 520;
     public static final int RIPNG_PORT = 521;
+    public static final int INTMON_PORT = 1234;
 
     private static final short UDP_HEADER_LENGTH = 8;
 

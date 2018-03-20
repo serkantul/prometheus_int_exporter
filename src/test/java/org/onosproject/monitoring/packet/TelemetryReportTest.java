@@ -141,16 +141,20 @@ public class TelemetryReportTest {
         Ethernet eth = Ethernet.deserializer().deserialize(byteFromPcap, 0, byteFromPcap.length);
         IPv4 ip = (IPv4) eth.getPayload();
         UDP udp = (UDP) ip.getPayload();
-        byte[] bytePacketUdp = udp.serialize();
+        TelemetryReport reportPacket = (TelemetryReport) udp.getPayload();
 
-        TelemetryReport reportPacket = deserializer.deserialize(bytePacketUdp, 0, bytePacketUdp.length);
+        Ethernet innerEth = (Ethernet) reportPacket.getPayload();
+        IPv4 innerIP = (IPv4) innerEth.getPayload();
+        TCP innerTCP = (TCP) innerIP.getPayload();
+        byte[] intData = (byte[])(((Data)innerTCP.getPayload()).getData());
+        P4Int p4Int = P4Int.deserializer().deserialize(intData, 0, intData.length);
 
         assertThat(reportPacket.getVersion(), is((byte) 0x00));
         assertThat(reportPacket.getNextProto(), is((byte) 0x00));
         assertThat(reportPacket.hasDroppedPacket(), is((boolean) false));
         assertThat(reportPacket.hasCongestion(), is((boolean) false));
         assertThat(reportPacket.hasTrackedFlow(), is((boolean) true));
-        assertThat(reportPacket.getHwId(), is((byte) 0x00));
+        assertThat(reportPacket.getHwId(), is((byte) 0x01));
         assertThat(reportPacket.getSequence(), is((int) 0x00));
         assertThat(reportPacket.getIngressTimeStamp(), is((int) 0x00));
 

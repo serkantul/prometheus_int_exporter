@@ -420,8 +420,15 @@ public class TCP extends BasePacket {
                 bb.get(tcp.options, 0, optLength);
             }
 
-            tcp.payload = Data.deserializer()
-                    .deserialize(data, bb.position(), bb.limit() - bb.position());
+            Deserializer<? extends IPacket> deserializer;
+            //TODO what if the parent is IPv6
+            //TODO getDscp returns null here
+            //if (((IPv4) tcp.getParent()).getDscp() == 1) {
+            //    deserializer = P4Int.deserializer();
+            //} else {
+                deserializer = Data.deserializer();
+            //}
+            tcp.payload = deserializer.deserialize(data, bb.position(), bb.limit() - bb.position());
             tcp.payload.setParent(tcp);
             return tcp;
         };
