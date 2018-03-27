@@ -32,7 +32,7 @@ public class TCP extends BasePacket {
     private static final short IP_HEADER_LENGTH = 20;
     private static final short TCP_HEADER_LENGTH = 20;
 
-    private static final byte INT_DSCP = 0x1;
+    public static final byte INT_DSCP = 0x1;
 
     protected int sourcePort;
     protected int destinationPort;
