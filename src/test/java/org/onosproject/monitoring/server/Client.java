@@ -1,21 +1,20 @@
 package org.onosproject.monitoring.server;
 
-import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.Channel;
-import io.netty.channel.EventLoopGroup;
-import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.nio.NioSocketChannel;
 
-import java.io.BufferedReader;
+import org.onosproject.monitoring.packet.PacketTestUtils;
+
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class Client {
 
     public static void main(String args[]){
 
-        byte[] buf = new byte[256];
+
+        byte [] buf = null;
         DatagramSocket socket = null;
         try {
             socket = new DatagramSocket();
@@ -29,15 +28,22 @@ public class Client {
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
-        buf= "hello".getBytes();
+
+
+
+        buf = PacketTestUtils.readFromPcapFile("/home/iver/prometheus_int_exporter/src/test/resources/int_report.pcap");
+
+
         DatagramPacket packet = new DatagramPacket(buf, buf.length, address, 27072);
         try {
             socket.send(packet);
-            System.out.println(buf);
+            System.out.println(packet);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
+
 
 /*    public static void main(String[] args) throws Exception {
         String host = "localhost";

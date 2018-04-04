@@ -17,6 +17,7 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 // and print the client messages on the server
 public class Server {
 
+
     public static void main(String[] args) throws Exception {
         int port = 27072;
         new Server(port).run();

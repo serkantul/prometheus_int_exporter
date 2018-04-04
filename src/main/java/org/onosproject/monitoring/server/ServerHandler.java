@@ -9,7 +9,13 @@ import io.netty.channel.socket.DatagramPacket;
 import io.netty.util.ReferenceCountUtil;
 import io.netty.util.concurrent.GlobalEventExecutor;
 
+//import java.net.DatagramPacket;
+
+
+
 public class ServerHandler extends SimpleChannelInboundHandler<DatagramPacket> {
+
+    static final IntPushGateway intReport = new IntPushGateway();
 
     private static final ChannelGroup channels = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
 
@@ -46,6 +52,8 @@ public class ServerHandler extends SimpleChannelInboundHandler<DatagramPacket> {
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, DatagramPacket datagramPacket) throws Exception {
         // receive INT report
+        intReport.receivePacket(datagramPacket);
+        //System.out.println(intReport.getTelemetryReport());
     }
 
     /*
