@@ -1,21 +1,17 @@
 package org.onosproject.monitoring.server;
 
-import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.Channel;
-import io.netty.channel.EventLoopGroup;
-import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.nio.NioSocketChannel;
 
-import java.io.BufferedReader;
+import org.onosproject.monitoring.packet.PacketTestUtils;
+
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.*;
 
 public class Client {
 
     public static void main(String args[]){
 
-        byte[] buf = new byte[256];
+
+        byte [] buf = null;
         DatagramSocket socket = null;
         try {
             socket = new DatagramSocket();
@@ -29,15 +25,26 @@ public class Client {
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
-        buf= "hello".getBytes();
-        DatagramPacket packet = new DatagramPacket(buf, buf.length, address, 27072);
+
+        buf = PacketTestUtils.readFromPcapFile("src/test/resources/int_report.pcap");
+
+        /*
+        Buffer bytes should start from the UDP portion,
+        since we're sending the packet through the socket the OS also adds its own Ethernet and IP headers.
+
+        P.S. The ethernet frame is 14 bytes, and ip header is 20 bytes.
+        */
+
+        DatagramPacket packet = new DatagramPacket(buf, 14+20, buf.length-14-20, address, 27072);
         try {
             socket.send(packet);
-            System.out.println(buf);
+            System.out.println(packet);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
+
 
 /*    public static void main(String[] args) throws Exception {
         String host = "localhost";
