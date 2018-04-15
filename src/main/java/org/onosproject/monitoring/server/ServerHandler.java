@@ -8,10 +8,21 @@ import io.netty.channel.group.DefaultChannelGroup;
 import io.netty.channel.socket.DatagramPacket;
 import io.netty.util.ReferenceCountUtil;
 import io.netty.util.concurrent.GlobalEventExecutor;
+import io.prometheus.client.exporter.INTExporter;
+import io.prometheus.client.exporter.PushGateway;
+import org.onosproject.monitoring.packet.Ethernet;
+import org.onosproject.monitoring.packet.IPv4;
+import org.onosproject.monitoring.packet.TelemetryReport;
+import org.onosproject.monitoring.packet.UDP;
 
 public class ServerHandler extends SimpleChannelInboundHandler<DatagramPacket> {
 
     private static final ChannelGroup channels = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
+    private INTExporter intExporter;
+
+    public ServerHandler() {
+        intExporter = new INTExporter("localhost:1234");
+    }
 
 /*
     @Override
@@ -46,6 +57,10 @@ public class ServerHandler extends SimpleChannelInboundHandler<DatagramPacket> {
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, DatagramPacket datagramPacket) throws Exception {
         // receive INT report
+        byte[] content = datagramPacket.content().array();
+        UDP udp = UDP.deserializer().deserialize(content, 0, content.length);
+        TelemetryReport reportPacket = (TelemetryReport) udp.getPayload();
+        intExporter.pushMetrics(reportPacket);
     }
 
     /*
