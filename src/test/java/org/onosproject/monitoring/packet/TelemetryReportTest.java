@@ -151,7 +151,7 @@ public class TelemetryReportTest {
         assertThat(reportPacket.hasDroppedPacket(), is((boolean) false));
         assertThat(reportPacket.hasCongestion(), is((boolean) false));
         assertThat(reportPacket.hasTrackedFlow(), is((boolean) true));
-        assertThat(reportPacket.getHwId(), is((byte) 0x00));
+        assertThat(reportPacket.getHwId(), is((byte) 0x01));
         assertThat(reportPacket.getSequence(), is((int) 0x00));
         assertThat(reportPacket.getIngressTimeStamp(), is((int) 0x00));
     }
