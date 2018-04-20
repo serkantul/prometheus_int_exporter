@@ -238,9 +238,11 @@ public class TelemetryReport extends BasePacket {
             }
 
             // Inner Ethernet header
-            reportPacket.payload = Ethernet.deserializer()
-                    .deserialize(data, bb.position(), bb.limit() - bb.position());
-            reportPacket.payload.setParent(reportPacket);
+            int remainingLen = bb.limit() - bb.position();
+            if(remainingLen > 0) {
+                reportPacket.payload = Ethernet.deserializer().deserialize(data, bb.position(), remainingLen);
+                reportPacket.payload.setParent(reportPacket);
+            }
 
             return reportPacket;
         };
